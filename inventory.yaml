@@ -1,0 +1,13 @@
+all:
+  hosts:
+    server01:
+      ansible_host: 10.1.10.31
+      ansible_user: cisco
+      ansible_password: cisco 
+    server02:
+      ansible_host: 10.1.10.32
+      ansible_user: cisco
+      ansible_password: cisco 
+  vars:
+    ansible_connection: ssh 
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

@@ -1,0 +1,14 @@
+---
+- name: Get stats and write to desktop
+  hosts: all
+  tasks:
+    - name: Change directory permissions
+      file:
+        path: /home/cisco/AnsibleIaCservers
+        state: directory
+        mode: '0700'
+    - name: Get system status and info
+      shell: uname -a > /home/cisco/AnsibleIaCservers/output.txt
+
+    - name: Append username to output file
+      shell: whoami >> /home/cisco/AnsibleIaCservers/output.txt

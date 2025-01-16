@@ -1,0 +1,27 @@
+---
+- name: Uninstall nginx with ignore_errors
+  hosts: all
+  become: yes #Ensure privilege excalation for package management
+  tasks:
+    - name: Uninstall app from Linux 
+      yum:
+        name: nginx
+        state: absent 
+      register: nginx_uninstall_Centos
+      ignore_errors: true
+
+    - name: Uninstall app from Ubuntu 
+      apt:
+        name: nginx 
+        state: absent 
+      register: nginx_uninstall_Ubuntu
+
+    - name: Check nginx uninstallation status on Debian/Ubuntu
+      debug:
+        msg: "Nginx uninstallation on Debian/Ubuntu was {{ 'successful' if nginx_uninstall_Centos is not failed else 'unsuccessful' }}"
+      when: nginx_uninstall_Centos is defined
+
+    - name: Check nginx uninstallation status on RedHat/CentOS
+      debug:
+        msg: "Nginx uninstallation on RedHat/CentOS was {{ 'successful' if nginx_uninstall_Ubuntu is not failed else 'unsuccessful' }}"
+      when: nginx_uninstall_Ubuntu is defined

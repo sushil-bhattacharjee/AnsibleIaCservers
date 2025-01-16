@@ -1,0 +1,33 @@
+---
+- name: Gather all information from the linux server 
+  hosts: all
+  tasks:
+    - name: print OS family to file 
+      shell: echo "The family is {{ansible_os_family}}"
+      register: os_family 
+    - name: Print Default Machine NIC name to console 
+      debug: msg="{{ansible_default_ipv4.interface}}"
+      register: nic_info
+    - name: Register ls results variable 
+      command: "ls" 
+      register: dirs 
+    - name: Print dirs variable from last step to console 
+      debug:
+        msg: "{{dirs}}"
+    - name: Ensure output directory exists on local machine
+      delegate_to: localhost
+      file:
+        path: /home/sushil/AnsibleIaCservers/output
+        state: directory
+        mode: '0755'
+    - name: Write output to local file  using local_location
+      local_action:
+        module: copy 
+        content: |
+          OS Family: {{ os_family.stdout }}
+        dest: /home/sushil/AnsibleIaCservers/output/output.txt
+    - name: Append remaining output using delegate_to 
+      delegate_to: localhost 
+      shell: |
+        echo "Default NIC: {{ nic_info.msg }}" >> /home/sushil/AnsibleIaCservers/output/output.txt
+        echo "Directory Listing: {{ dirs.stdout }}" >> /home/sushil/AnsibleIaCservers/output/output.txt

@@ -1,0 +1,5 @@
+OS Family: The family is Debian
+Default NIC: ens3
+Directory Listing: AnsibleIaCservers
+Default NIC: ens3
+Directory Listing: AnsibleIaCservers

@@ -1,0 +1,26 @@
+---
+- name: App install with When condition
+  hosts: all
+  become: yes  # Ensure privilege escalation for package installation
+  tasks:
+    - name: Detect the operating system
+      debug:
+        msg: "The system is running on {{ ansible_os_family }}"
+
+    - name: Install nginx on Debian/Ubuntu
+      apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == "Debian"
+      register: nginx_result
+
+    - name: Install nginx on RedHat/CentOS
+      yum:
+        name: nginx
+        state: present
+      when: ansible_os_family == "RedHat"
+      register: nginx_result
+
+    - name: Check nginx installation status
+      debug:
+        msg: "Nginx installation was {{ 'successful' if nginx_result is not failed else 'unsuccessful' }}"
