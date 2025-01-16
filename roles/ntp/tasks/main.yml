@@ -1,0 +1,27 @@
+---
+# tasks file for roles/ntp
+
+- name: Install time synchronization service (NTP or Chrony)
+  package:
+    name: "{{ ntp_package }}"
+    state: present
+
+- name: Start time synchronization service
+  service:
+    name: "{{ ntp_service }}"
+    state: started
+    enabled: true
+
+- name: Create NTP configuration from the template
+  template:
+    src: ntp.conf.tmpl
+    dest: "{{ ntp_config_file }}"
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Restart time synchronization service
+  service:
+    name: "{{ ntp_service }}"
+    state: restarted
+
